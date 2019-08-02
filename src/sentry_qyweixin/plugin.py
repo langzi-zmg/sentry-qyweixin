@@ -5,31 +5,31 @@ import json
 import requests
 from sentry.plugins.bases.notify import NotificationPlugin
 
-import sentry_dingding
-from .forms import DingDingOptionsForm
+import sentry_qyweixin
+from .forms import WeixinOptionsForm
 
-DingTalk_API = "https://oapi.dingtalk.com/robot/send?access_token={token}"
+DingTalk_API = "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key={access_token}"
 
 
-class DingDingPlugin(NotificationPlugin):
+class QyWeixinPlugin(NotificationPlugin):
     """
     Sentry plugin to send error counts to DingDing.
     """
     author = 'ansheng'
     author_url = 'https://github.com/anshengme/sentry-dingding'
-    version = sentry_dingding.VERSION
+    version = sentry_qyweixin.VERSION
     description = 'Send error counts to DingDing.'
     resource_links = [
-        ('Source', 'https://github.com/anshengme/sentry-dingding'),
-        ('Bug Tracker', 'https://github.com/anshengme/sentry-dingding/issues'),
-        ('README', 'https://github.com/anshengme/sentry-dingding/blob/master/README.md'),
+        ('Source', 'null'),
+        ('Bug Tracker', 'null'),
+        ('README', 'null'),
     ]
 
-    slug = 'DingDing'
-    title = 'DingDing'
+    slug = 'QyWeixin'
+    title = 'QyWeixin'
     conf_key = slug
     conf_title = title
-    project_conf_form = DingDingOptionsForm
+    project_conf_form = WeixinOptionsForm
 
     def is_configured(self, project):
         """
@@ -48,14 +48,13 @@ class DingDingPlugin(NotificationPlugin):
             return
 
         access_token = self.get_option('access_token', group.project)
-        send_url = DingTalk_API.format(token=access_token)
+        send_url = DingTalk_API.format(access_token=access_token)
         title = "New alert from {}".format(event.project.slug)
 
         data = {
             "msgtype": "markdown",
             "markdown": {
-                "title": title,
-                "text": u"#### {title} \n > {message} [href]({url})".format(
+                "content": u"#### {title} \n > {message} [href]({url})".format(
                     title=title,
                     message=event.message,
                     url=u"{}events/{}/".format(group.get_absolute_url(), event.id),
