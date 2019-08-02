@@ -12,7 +12,7 @@ $ python install setup.py
 
 ## 使用
 
-在`项目`的所有集成页面找到`DingDing`插件，启用，并设置`Access Token`
+在`项目`的所有集成页面找到`QyWeixin`插件，启用，并设置`Access Token`
 
 
 在插件上使用`Test Plugin`进行测试，当配置好`Access Token`后，在钉钉群内会得到以下警告
